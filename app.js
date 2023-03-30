@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const fs = require('fs').promises;
 
+const NETWORK = process.env.NETWORK;
 const MONITORING_INTERVAL = process.env.MONITORING_INTERVAL || 10000;
 const EVM_NODE_URL = process.env.EVM_NODE_URL;
 const MONITORING_PORT = process.env.MONITORING_PORT || 3000;
@@ -93,6 +94,7 @@ async function performMonitoring() {
     }
 
     const monitoringData = {
+        network: NETWORK,
         lastBlockNumber,
         timeSinceLastBlock,
         timeSinceUpgrade,
