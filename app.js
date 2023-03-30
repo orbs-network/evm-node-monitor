@@ -82,7 +82,7 @@ async function performMonitoring() {
 
     let status = 'OK';
     if (timeSinceLastBlock > 60000) {
-        status = 'ERROR';
+        status = 'ERROR - block is too old!';
     }
 
     if (timeSinceUpgrade >= UPGRADE_INTERVAL) {
@@ -124,7 +124,7 @@ app.get('/monitoring', async (req, res) => {
         const elapsedTime = currentTime - savedTimestamp;
 
         if (elapsedTime > MONITORING_INTERVAL * 2) {
-            monitoringData.status = 'ERROR - stale data';
+            monitoringData.status = 'ERROR - stale data!';
         }
 
         res.json(monitoringData);
