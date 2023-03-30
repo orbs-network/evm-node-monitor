@@ -1,0 +1,22 @@
+{
+  "name": "evm-node-monitor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "David Dayag",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.6"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3"
+  }
+}
