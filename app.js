@@ -44,7 +44,7 @@ async function fetchBlockNumber() {
 
 async function getSystemMetrics() {
     const freeDiskSpace = await new Promise((resolve) =>
-        exec('df --output=avail /', (error, stdout) => resolve(stdout.split('\n')[1]))
+        exec('df --output=avail /', (error, stdout) => resolve(parseInt(stdout.split('\n')[1])))
     );
 
     const freeMemory = await new Promise((resolve) =>
@@ -105,6 +105,9 @@ async function performMonitoring() {
 
     // Save monitoring data to disk
     const monitoringDataWithTimestamp = {...monitoringData, timestamp: new Date().toISOString()};
+
+    console.log(monitoringDataWithTimestamp)
+
     await fs.writeFile('monitoring_data.json', JSON.stringify(monitoringDataWithTimestamp, null, 2));
 
     return monitoringData;
