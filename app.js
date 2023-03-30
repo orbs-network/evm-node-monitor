@@ -48,7 +48,7 @@ async function getSystemMetrics() {
     );
 
     const freeMemory = await new Promise((resolve) =>
-        exec('free -m | awk \'NR==2{print $4}\'', (error, stdout) => resolve(parseInt(stdout.trim())))
+        exec('free -m | awk \'NR==2{print $7}\'', (error, stdout) => resolve(parseInt(stdout.trim())))
     );
 
     const cpuUsage = await new Promise((resolve) =>
