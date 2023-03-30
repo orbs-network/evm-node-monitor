@@ -33,7 +33,7 @@ async function fetchBlockNumber() {
     const currentBlockNumber = parseInt(jsonResponse.result, 16);
     const currentTime = Date.now();
 
-    if (currentBlockNumber !== lastBlockNumber) {
+    if (currentBlockNumber && currentBlockNumber !== lastBlockNumber) {
         lastBlockTime = currentTime;
         lastBlockNumber = currentBlockNumber;
     }
