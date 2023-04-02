@@ -1,7 +1,10 @@
 require('dotenv').config(); // Add this line at the top of the file
 const fetch = require('node-fetch');
+const cors = require('cors');
 const express = require('express');
+
 const app = express();
+app.use(cors());
 const fs = require('fs').promises;
 
 const NETWORK = process.env.NETWORK;
