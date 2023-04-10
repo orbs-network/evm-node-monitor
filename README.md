@@ -24,10 +24,9 @@ A simple monitoring application for an EVM (Ethereum Virtual Machine) blockchain
 
     npm install
 
-4. Update the app.js file with the appropriate values for your EVM node:
-* Replace your-node-url with the URL of your EVM node.
-* Replace port with the desired port for the monitoring server.
-* Replace your-upgrade-command with the command to upgrade your EVM node.
+4. Set the EVM_NODE_URL environment variable with the URL of your EVM node:
+
+    EVM_NODE_URL=https://your-node-url
 
 ## Usage
 Start the monitoring application:
