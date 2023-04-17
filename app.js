@@ -105,7 +105,7 @@ async function performMonitoring() {
         freeDiskSpace,
         freeMemory,
         cpuUsage,
-        uptime: os.uptime(),
+        uptime: process.uptime(),
         status,
     };
 
