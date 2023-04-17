@@ -1,6 +1,6 @@
 {
   "name": "evm-node-monitor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "EVM Node Monitoring",
   "main": "app.js",
   "scripts": {
