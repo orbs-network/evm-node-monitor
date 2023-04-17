@@ -2,6 +2,7 @@ require('dotenv').config(); // Add this line at the top of the file
 const fetch = require('node-fetch');
 const cors = require('cors');
 const express = require('express');
+const os = require('os');
 
 const app = express();
 app.use(cors());
@@ -104,6 +105,7 @@ async function performMonitoring() {
         freeDiskSpace,
         freeMemory,
         cpuUsage,
+        uptime: os.uptime(),
         status,
     };
 
