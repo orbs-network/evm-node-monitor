@@ -14,9 +14,14 @@ const EVM_NODE_URL = process.env.EVM_NODE_URL;
 const MONITORING_PORT = process.env.MONITORING_PORT || 3000;
 const UPGRADE_COMMAND = process.env.UPGRADE_COMMAND || 'echo no upgrade script provided! skipping...';
 const UPGRADE_INTERVAL = process.env.UPGRADE_INTERVAL || 86400000;
+const NODE_INFO_CMD = process.env.NODE_INFO_CMD
+const NODE_GIT_RELEASE_URL = process.env.NODE_GIT_RELEASE_URL
+const EXTRACT_VERSION_REGEXP = process.env.EXTRACT_VERSION_REGEXP
+const ATTEMPT_UPGRADE = process.env.ATTEMPT_UPGRADE === 'true'
 
 const {exec} = require('child_process');
 
+let isUpgrading = false;
 let lastBlockNumber = -1;
 let lastBlockTime = 0;
 let timeSinceUpgrade = 0;
@@ -45,6 +50,37 @@ async function fetchBlockNumber() {
     return currentTime - lastBlockTime;
 }
 
+async function getCurrentNodeVersion() {
+    const getNodeVersionOutput = await new Promise((resolve, reject) => {
+        exec(
+            NODE_INFO_CMD,
+            (error, stdout) => {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                resolve(stdout);
+            }
+        );
+    });
+
+    const platformVersionRegex = new RegExp(EXTRACT_VERSION_REGEXP);
+    const match = getNodeVersionOutput.match(platformVersionRegex);
+
+    if (match && match[1]) {
+        return match[1];
+    } else {
+        throw new Error('Could not extract platform version from the output');
+    }
+}
+
+
+async function getLatestReleaseVersion() {
+    const response = await fetch(NODE_GIT_RELEASE_URL);
+    const jsonResponse = await response.json();
+    return jsonResponse.tag_name;
+}
+
 
 async function getSystemMetrics() {
     const freeDiskSpace = await new Promise((resolve) =>
@@ -65,6 +101,7 @@ async function getSystemMetrics() {
 }
 
 async function runUpgradeCommand() {
+    isUpgrading = true; // Set the flag to true before running the upgrade
     await new Promise((resolve) =>
         exec(UPGRADE_COMMAND, (error, stdout, stderr) => {
             if (error) {
@@ -77,6 +114,7 @@ async function runUpgradeCommand() {
             resolve();
         })
     );
+    isUpgrading = false; // Set the flag back to false after the upgrade is complete
 }
 
 
@@ -89,12 +127,19 @@ async function performMonitoring() {
         status = 'ERROR - block is too old!';
     }
 
-    if (timeSinceUpgrade >= UPGRADE_INTERVAL) {
-        await runUpgradeCommand();
-        console.log('Node upgraded');
-        timeSinceUpgrade = 0;
-    } else {
-        timeSinceUpgrade += MONITORING_INTERVAL;
+    if (ATTEMPT_UPGRADE) {
+
+        const currentNodeVersion = await getCurrentNodeVersion();
+        const latestReleaseVersion = await getLatestReleaseVersion();
+
+        if (timeSinceUpgrade >= UPGRADE_INTERVAL && currentNodeVersion !== latestReleaseVersion) {
+            await runUpgradeCommand();
+            console.log('Node upgraded');
+            timeSinceUpgrade = 0;
+        } else {
+            timeSinceUpgrade += MONITORING_INTERVAL;
+        }
+
     }
 
     const monitoringData = {
@@ -141,14 +186,16 @@ app.get('/monitoring', async (req, res) => {
 
 // ... (rest of the code)
 
-app.listen(MONITORING_PORT, () => {
+app.listen(MONITORING_PORT, async () => {
 
     console.log(`EVM Node Monitor listening at http://localhost:${MONITORING_PORT}`);
 
-    performMonitoring();
+    await performMonitoring();
 
     setInterval(async () => {
-        await performMonitoring();
+        if (!isUpgrading) { // Check if an upgrade is in progress before performing monitoring
+            await performMonitoring();
+        }
     }, MONITORING_INTERVAL);
 });
 
