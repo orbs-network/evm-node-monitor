@@ -165,7 +165,7 @@ async function performMonitoring() {
 }
 
 
-app.get('/monitoring', async (req, res) => {
+app.get('/', async (req, res) => {
     try {
         const monitoringDataFromFile = await fs.readFile('monitoring_data.json', 'utf-8');
         const monitoringData = JSON.parse(monitoringDataFromFile);
