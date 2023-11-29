@@ -11,13 +11,14 @@ const fs = require('fs').promises;
 const NETWORK = process.env.NETWORK;
 const MONITORING_INTERVAL = process.env.MONITORING_INTERVAL || 10000;
 const EVM_NODE_URL = process.env.EVM_NODE_URL;
+const BLOCK_STALENESS_THRESHOLD = process.env.BLOCK_STALENESS_THRESHOLD || 30000;
 const MONITORING_PORT = process.env.MONITORING_PORT || 3000;
-const UPGRADE_COMMAND = process.env.UPGRADE_COMMAND || 'echo no upgrade script provided! skipping...';
+const UPGRADE_COMMAND = process.env.UPGRADE_COMMAND
 const UPGRADE_INTERVAL = process.env.UPGRADE_INTERVAL || 86400000;
 const NODE_INFO_CMD = process.env.NODE_INFO_CMD
 const NODE_GIT_RELEASE_URL = process.env.NODE_GIT_RELEASE_URL
 const EXTRACT_VERSION_REGEXP = process.env.EXTRACT_VERSION_REGEXP
-const ATTEMPT_UPGRADE = process.env.ATTEMPT_UPGRADE === 'true'
+const ATTEMPT_COMMON_GH_UPGRADE = process.env.ATTEMPT_COMMON_GH_UPGRADE === 'true'
 
 const {exec} = require('child_process');
 
@@ -27,27 +28,35 @@ let lastBlockTime = 0;
 let timeSinceUpgrade = 0;
 
 async function fetchBlockNumber() {
-    const response = await fetch(EVM_NODE_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-            jsonrpc: '2.0',
-            method: 'eth_blockNumber',
-            params: [],
-            id: 1,
-        }),
-    });
+    try {
+        const response = await fetch(EVM_NODE_URL, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                jsonrpc: '2.0',
+                method: 'eth_blockNumber',
+                params: [],
+                id: 1,
+            }),
+        });
 
-    const jsonResponse = await response.json();
-    const currentBlockNumber = parseInt(jsonResponse.result, 16);
-    const currentTime = Date.now();
+        const jsonResponse = await response.json();
+        const currentBlockNumber = parseInt(jsonResponse.result, 16);
+        const currentTime = Date.now();
 
-    if (currentBlockNumber && currentBlockNumber !== lastBlockNumber) {
-        lastBlockTime = currentTime;
-        lastBlockNumber = currentBlockNumber;
+        if (currentBlockNumber && currentBlockNumber !== lastBlockNumber) {
+            lastBlockTime = currentTime;
+            lastBlockNumber = currentBlockNumber;
+        }
+
+        return currentTime - lastBlockTime;
+
+    } catch (e) {
+
+        console.error(e)
+        return BLOCK_STALENESS_THRESHOLD + 1
+
     }
-
-    return currentTime - lastBlockTime;
 }
 
 async function getCurrentNodeVersion() {
@@ -100,8 +109,24 @@ async function getSystemMetrics() {
     return {freeDiskSpace, freeMemory, cpuUsage};
 }
 
+
 async function runUpgradeCommand() {
     isUpgrading = true; // Set the flag to true before running the upgrade
+
+    // Ensure the script is executable
+    await new Promise((resolve) => {
+        exec(`chmod +x ${UPGRADE_COMMAND}`, (chmodError) => {
+            if (chmodError) {
+                console.error(`Error setting script permissions: ${chmodError.message}`);
+                resolve();
+                return;
+            }
+            console.log(`Permissions set for upgrade script.`);
+            resolve();
+        });
+    });
+
+    // Run the upgrade command
     await new Promise((resolve) =>
         exec(UPGRADE_COMMAND, (error, stdout, stderr) => {
             if (error) {
@@ -114,20 +139,20 @@ async function runUpgradeCommand() {
             resolve();
         })
     );
+
     isUpgrading = false; // Set the flag back to false after the upgrade is complete
 }
-
 
 async function performMonitoring() {
     const timeSinceLastBlock = await fetchBlockNumber();
     const {freeDiskSpace, freeMemory, cpuUsage} = await getSystemMetrics();
 
     let status = 'OK';
-    if (timeSinceLastBlock > 60000) {
+    if (timeSinceLastBlock > BLOCK_STALENESS_THRESHOLD) {
         status = 'ERROR - block is too old!';
     }
 
-    if (ATTEMPT_UPGRADE) {
+    if (UPGRADE_COMMAND && ATTEMPT_COMMON_GH_UPGRADE) {
 
         const currentNodeVersion = await getCurrentNodeVersion();
         const latestReleaseVersion = await getLatestReleaseVersion();
@@ -139,6 +164,10 @@ async function performMonitoring() {
         } else {
             timeSinceUpgrade += MONITORING_INTERVAL;
         }
+
+    } else if (UPGRADE_COMMAND) {
+
+        await runUpgradeCommand();
 
     }
 
