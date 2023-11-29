@@ -152,23 +152,31 @@ async function performMonitoring() {
         status = 'ERROR - block is too old!';
     }
 
-    if (UPGRADE_COMMAND && ATTEMPT_COMMON_GH_UPGRADE) {
+    if (timeSinceUpgrade >= UPGRADE_INTERVAL) {
 
-        const currentNodeVersion = await getCurrentNodeVersion();
-        const latestReleaseVersion = await getLatestReleaseVersion();
+        if (UPGRADE_COMMAND && ATTEMPT_COMMON_GH_UPGRADE) {
 
-        if (timeSinceUpgrade >= UPGRADE_INTERVAL && currentNodeVersion !== latestReleaseVersion) {
+            const currentNodeVersion = await getCurrentNodeVersion();
+            const latestReleaseVersion = await getLatestReleaseVersion();
+
+            if (currentNodeVersion !== latestReleaseVersion) {
+
+                await runUpgradeCommand();
+                console.log('Node upgraded');
+
+            }
+
+        } else if (UPGRADE_COMMAND) {
+
             await runUpgradeCommand();
             console.log('Node upgraded');
-            timeSinceUpgrade = 0;
-        } else {
-            timeSinceUpgrade += MONITORING_INTERVAL;
+
         }
 
-    } else if (UPGRADE_COMMAND) {
+        timeSinceUpgrade = 0;
 
-        await runUpgradeCommand();
-
+    } else {
+        timeSinceUpgrade += MONITORING_INTERVAL;
     }
 
     const monitoringData = {
