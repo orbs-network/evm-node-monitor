@@ -33,6 +33,7 @@ version_gt() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"; }
 
 # Compare versions and upgrade if the latest version is greater
 if version_gt $LATEST_VERSION $LOCAL_VERSION; then
+  
     log "New version available. Upgrading from $LOCAL_VERSION to $LATEST_VERSION"
 
     sudo service bor stop
@@ -44,10 +45,15 @@ if version_gt $LATEST_VERSION $LOCAL_VERSION; then
     NEW_VERSION_CHECK=$(/usr/bin/bor version)
     log "New version check: $NEW_VERSION_CHECK"
 
+    log "sleeping 5 sec..."
+    sleep 5
+
+    log "starting bor..."
     sudo service bor start
     log "Bor service started."
 
     log "Upgrade completed to version $(/usr/bin/bor version | grep "Version:" | awk '{print $2}')"
+
 else
     log "No upgrade required. Current version is $LOCAL_VERSION"
 fi
