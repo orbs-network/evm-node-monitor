@@ -11,7 +11,7 @@ log() {
 log "*** $NETWORK upgrade script started ***"
 
 # Fetch the current local version of bor
-LOCAL_VERSION=$(/usr/bin/bor version | grep "Version:" | awk '{print $2}')
+LOCAL_VERSION=$(/home/ubuntu/go-opera/build/opera version | grep '^Version:' | cut -d':' -f2 | xargs)
 
 # Check if LOCAL_VERSION is valid
 if [[ -z "$LOCAL_VERSION" ]]; then
@@ -23,7 +23,7 @@ fi
 log "Local version fetched: $LOCAL_VERSION"
 
 # Fetch the latest version from GitHub tagged as "latest"
-LATEST_VERSION_RAW=$(curl -s https://api.github.com/repos/maticnetwork/bor/releases/latest | awk -F '"' '/tag_name/ {print $4}')
+LATEST_VERSION_RAW=$(curl -s "https://api.github.com/repos/Fantom-foundation/go-opera/releases/latest" | grep '"tag_name":' | cut -d '"' -f4)
 # Remove 'v' prefix if present
 LATEST_VERSION=${LATEST_VERSION_RAW#v}
 log "Latest version fetched from GitHub: $LATEST_VERSION_RAW (Processed as $LATEST_VERSION)"
@@ -41,7 +41,7 @@ if version_gt $LATEST_VERSION $LOCAL_VERSION; then
     # shellcheck disable=SC2164
     cd /home/ubuntu/go-opera/
 
-    git checkout release/txtracing/1.1.3-rc.5
+    git checkout release/$LATEST_VERSION
 
     make
 
