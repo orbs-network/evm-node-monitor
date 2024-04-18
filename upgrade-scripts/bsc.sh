@@ -48,6 +48,8 @@ if version_gt $LATEST_VERSION $LOCAL_VERSION; then
 
     sudo service bsc restart
 
+    UPGRADE_RESULT=OK
+
     log "Upgrade command executed. Result: $UPGRADE_RESULT"
 
 else
