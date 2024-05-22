@@ -34,12 +34,13 @@ sub vcl_recv {
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "250") {
-    set req.backend = F_Fantom_Serbia;
+  if (req.http.networkId == "250_f") {
+    set req.url = "/20289f480bd76a6ff8f423a6a395063e";
+    set req.backend = F_fantom_chainstack;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "250_f") {
+  if (req.http.networkId == "250") {
     set req.url = "/ogrpc?network=fantom&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_fantom_drpc;
     set req.http.ok = "1";
