@@ -12,16 +12,23 @@ sub vcl_recv {
   }
 
   # Select backend based on the networkId
+
   if (req.http.networkId == "137") {
     set req.backend = F_polygon_am;
     set req.http.ok = "1";
   }
 
   if (req.http.networkId == "137_f") {
-    set req.url = "/ogrpc?network=polygon&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
-    set req.backend = F_polygon_drpc;
+    set req.url = "/6183d002701da29bdeac03188f3d1570";
+    set req.backend = F_Polygon_Chainstack;
     set req.http.ok = "1";
   }
+
+  # if (req.http.networkId == "137") {
+  #   set req.url = "/ogrpc?network=polygon&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
+  #   set req.backend = F_polygon_drpc;
+  #   set req.http.ok = "1";
+  # }
 
   if (req.http.networkId == "56") {
     set req.backend = F_bsc_rpc_56;
@@ -29,13 +36,19 @@ sub vcl_recv {
   }
 
   if (req.http.networkId == "56_f") {
-    set req.url = "/ogrpc?network=bsc&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
-    set req.backend = F_bsc_drpc;
+    set req.url = "/a202c7d3a264642ea7982255a5f2ab47";
+    set req.backend = F_BSC_Chainstack;
     set req.http.ok = "1";
   }
 
+  # if (req.http.networkId == "56") {
+  #   set req.url = "/ogrpc?network=bsc&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
+  #   set req.backend = F_bsc_drpc;
+  #   set req.http.ok = "1";
+  # }
+
   if (req.http.networkId == "250_f") {
-    set req.url = "/20289f480bd76a6ff8f423a6a395063e";
+    set req.url = "/bc538ec4513f517f07cfcc24a9c0d550";
     set req.backend = F_fantom_chainstack;
     set req.http.ok = "1";
   }
@@ -47,8 +60,8 @@ sub vcl_recv {
   }
 
   if (req.http.networkId == "43114_f") {
-    set req.url = "/02076852eeb79c5e4355b92ef390ec28/ext/bc/C/rpc";
-    set req.backend = F_Chainstack_Avax;
+    set req.url = "/ext/bc/C/rpc/14915b680a99e80ea1d2bf90574f4e04";
+    set req.backend = F_Avax_Chainstack;
     set req.http.ok = "1";
   }
 
@@ -95,7 +108,7 @@ sub vcl_recv {
   }
 
   if (req.http.networkId == "8453_f") {
-    set req.url = "/7f8ef165dc16c3bd82eb707c839ede42";
+    set req.url = "/f06a003b0d42542b4da5f7f62be5ee57";
     set req.backend = F_Base_chainstack_node;
     set req.http.ok = "1";
   }
