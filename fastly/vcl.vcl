@@ -8,13 +8,14 @@ sub vcl_recv {
   }
 
   if (!req.http.password == "c0cc4a53105a582993deb4f9efc9a368f3f053a34384fb379567e01bfb9aace47") {
-    error 409;
+    error 401;
   }
 
   # Select backend based on the networkId
 
   if (req.http.networkId == "137") {
-    set req.backend = F_polygon_am;
+    set req.url = "/ogrpc?network=polygon&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
+    set req.backend = F_polygon_drpc;
     set req.http.ok = "1";
   }
 
@@ -25,8 +26,19 @@ sub vcl_recv {
   }
 
   # if (req.http.networkId == "137") {
-  #   set req.url = "/ogrpc?network=polygon&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
-  #   set req.backend = F_polygon_drpc;
+  #   set req.backend = F_polygon_am;
+  #   set req.http.ok = "1";
+  # }
+  
+  if (req.http.networkId == "56_f") {
+    set req.url = "/ogrpc?network=bsc&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
+    set req.backend = F_bsc_drpc;
+    set req.http.ok = "1";
+  }
+
+  # if (req.http.networkId == "56_f") {
+  #   set req.url = "/a202c7d3a264642ea7982255a5f2ab47";
+  #   set req.backend = F_BSC_Chainstack;
   #   set req.http.ok = "1";
   # }
 
@@ -34,18 +46,6 @@ sub vcl_recv {
     set req.backend = F_bsc_rpc_56;
     set req.http.ok = "1";
   }
-
-  if (req.http.networkId == "56_f") {
-    set req.url = "/a202c7d3a264642ea7982255a5f2ab47";
-    set req.backend = F_BSC_Chainstack;
-    set req.http.ok = "1";
-  }
-
-  # if (req.http.networkId == "56") {
-  #   set req.url = "/ogrpc?network=bsc&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
-  #   set req.backend = F_bsc_drpc;
-  #   set req.http.ok = "1";
-  # }
 
   if (req.http.networkId == "250_f") {
     set req.url = "/bc538ec4513f517f07cfcc24a9c0d550";
@@ -166,11 +166,17 @@ sub vcl_recv {
     set req.http.ok = "1";
   }
 
+  #if (req.http.networkId == "25_f") {
+  #  set req.url = "/0742ba8eae895d08874afab1768690fb";
+  #  set req.backend = F_cronos_chainstack;
+  #  set req.http.ok = "1";
+  #}
+
   if (req.http.networkId == "25_f") {
-    set req.url = "/0742ba8eae895d08874afab1768690fb";
-    set req.backend = F_cronos_chainstack;
+    set req.backend = F_cronos_public;
     set req.http.ok = "1";
   }
+
   if (req.http.networkId == "25") {
     set req.url = "/ogrpc?network=cronos&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_cronos_drpc;
