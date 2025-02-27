@@ -14,203 +14,190 @@ sub vcl_recv {
   # Select backend based on the networkId
 
   if (req.http.networkId == "137") {
-    set req.url = "/ogrpc?network=polygon&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
-    set req.backend = F_polygon_drpc;
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=polygon";
     set req.http.ok = "1";
   }
 
   if (req.http.networkId == "137_f") {
-    set req.url = "/6183d002701da29bdeac03188f3d1570";
-    set req.backend = F_Polygon_Chainstack;
+    set req.backend = F_polygon_am;
     set req.http.ok = "1";
   }
-
-  # if (req.http.networkId == "137") {
-  #   set req.backend = F_polygon_am;
-  #   set req.http.ok = "1";
-  # }
-  
-  if (req.http.networkId == "56_f") {
-    set req.url = "/ogrpc?network=bsc&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
-    set req.backend = F_bsc_drpc;
-    set req.http.ok = "1";
-  }
-
-  # if (req.http.networkId == "56_f") {
-  #   set req.url = "/a202c7d3a264642ea7982255a5f2ab47";
-  #   set req.backend = F_BSC_Chainstack;
-  #   set req.http.ok = "1";
-  # }
 
   if (req.http.networkId == "56") {
-    set req.backend = F_bsc_rpc_56;
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=bsc";
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "250_f") {
-    set req.url = "/bc538ec4513f517f07cfcc24a9c0d550";
-    set req.backend = F_fantom_chainstack;
+  if (req.http.networkId == "56_f") {
+    set req.backend = F_bsc_serbian;
     set req.http.ok = "1";
   }
 
   if (req.http.networkId == "250") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=fantom";
+    set req.http.ok = "1";
+  }
+
+  if (req.http.networkId == "250_f") {
     set req.url = "/ogrpc?network=fantom&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_fantom_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "43114_f") {
-    set req.url = "/ext/bc/C/rpc/14915b680a99e80ea1d2bf90574f4e04";
-    set req.backend = F_Avax_Chainstack;
+  if (req.http.networkId == "43114") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=avalanche";
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "43114") {
+  if (req.http.networkId == "43114_f") {
     set req.url = "/ogrpc?network=avalanche&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_avalanche_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "42161_f") {
-    set req.backend = F_chainstack_arbitrum;
-    set req.url = "/52798623f7f93b9e10540aab5d506fec";
+  if (req.http.networkId == "42161") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=arbitrum";
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "42161") {
+  if (req.http.networkId == "42161_f") {
     set req.url = "/ogrpc?network=arbitrum&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_arbitrum_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "1284_f") {
-    set req.url = "/moonbeam";
-    set req.backend = F_moonbeam_public;
+  if (req.http.networkId == "1284") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=moonbeam";
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "1284") {
+  if (req.http.networkId == "1284_f") {
     set req.url = "/ogrpc?network=moonbeam&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_moonbeam_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "81457_f") {
-    set req.url = "/blast";
-    set req.backend = F_blast_public;
+  if (req.http.networkId == "81457") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=blast";
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "81457") {
+  if (req.http.networkId == "81457_f") {
     set req.url = "/ogrpc?network=blast&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_blast_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "8453_f") {
-    set req.url = "/f06a003b0d42542b4da5f7f62be5ee57";
-    set req.backend = F_Base_chainstack_node;
+  if (req.http.networkId == "8453") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=base";
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "8453") {
+  if (req.http.networkId == "8453_f") {
     set req.url = "/ogrpc?network=base&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_base_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "59144_f") {
-    set req.url = "/v3/820cc0e0e43f4f75a2c6f5cef6e0ba0a";
-    set req.backend = F_Linea_by_Infura;
+  if (req.http.networkId == "59144") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=linea";
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "59144") {
+  if (req.http.networkId == "59144_f") {
     set req.url = "/ogrpc?network=linea&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_linea_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "324_f") {
-    set req.url = "/5c2fbc8df3f30059d4d018cf1ca5b7a6";
-    set req.backend = F_ZkSync_Chianstack;
+  if (req.http.networkId == "324") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=zksync";
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "324") {
+  if (req.http.networkId == "324_f") {
     set req.url = "/ogrpc?network=zksync&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_zksync_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "1101_f") {
-    set req.url = "/2fc4f5b6151f0bc82e619390f18a2c53";
-    set req.backend = F_ZkEvm_Chainstack;
+  if (req.http.networkId == "1101") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=polygon-zkevm";
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "1101") {
+  if (req.http.networkId == "1101_f") {
     set req.url = "/ogrpc?network=polygon-zkevm&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_zkevm_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "1_f") {
-    set req.url = "/41354d16d1b5c896f474a056be3b8214";
-    set req.backend = F_ethereum_chainstack;
+  if (req.http.networkId == "1") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=ethereum";
     set req.http.ok = "1";
   }
-  if (req.http.networkId == "1") {
+
+  if (req.http.networkId == "1_f") {
     set req.url = "/ogrpc?network=ethereum&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_ethereum_drpc;
     set req.http.ok = "1";
   }
 
-  #if (req.http.networkId == "25_f") {
-  #  set req.url = "/0742ba8eae895d08874afab1768690fb";
-  #  set req.backend = F_cronos_chainstack;
-  #  set req.http.ok = "1";
-  #}
-
-  if (req.http.networkId == "25_f") {
-    set req.backend = F_cronos_public;
+  if (req.http.networkId == "25") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=cronos";
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "25") {
+  if (req.http.networkId == "25_f") {
     set req.url = "/ogrpc?network=cronos&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_cronos_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "2222_f") {
-    set req.url = "/kava_evm";
-    set req.backend = F_kava_public;
+  if (req.http.networkId == "2222") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=kava";
     set req.http.ok = "1";
   }
-  if (req.http.networkId == "2222") {
+
+  if (req.http.networkId == "2222_f") {
     set req.url = "/ogrpc?network=kava&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_kava_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "169_f") {
-    set req.url = "/http";
-    set req.backend = F_manta_public;
+  if (req.http.networkId == "169") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=manta-pacific";
     set req.http.ok = "1";
   }
-  if (req.http.networkId == "169") {
+
+  if (req.http.networkId == "169_f") {
     set req.url = "/ogrpc?network=manta-pacific&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_manta_drpc;
     set req.http.ok = "1";
   }
 
-  if (req.http.networkId == "5000_f") {
-    set req.url = "/mantle";
-    set req.backend = F_mantle_public;
+  if (req.http.networkId == "5000") {
+    set req.backend = F_rpcman;
+    set req.url = "/rpc?key=543798GHWJ759843GFDSJK759843&appId=twap-l3&chain=mantle";
     set req.http.ok = "1";
   }
-  if (req.http.networkId == "5000") {
+
+  if (req.http.networkId == "5000_f") {
     set req.url = "/ogrpc?network=mantle&dkey=AsLFV4HL9kVAkLCydcvX4XTQSP-dDeoR75FUivLNMzUy";
     set req.backend = F_mantle_drpc;
     set req.http.ok = "1";
